@@ -87,7 +87,7 @@ public class MyProducer implements StatusListener {
             stream.sample();
 
             try {
-                Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+                Thread.sleep(TimeUnit.SECONDS.toMillis(60));
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }

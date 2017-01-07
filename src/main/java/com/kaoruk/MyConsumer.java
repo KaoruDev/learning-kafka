@@ -43,8 +43,8 @@ public class MyConsumer implements Runnable{
 //        props.put("session.timeout.ms", "10000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
-        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 2_000);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 50);
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 1_000);
 
         return props;
     }
@@ -103,6 +103,9 @@ public class MyConsumer implements Runnable{
         consumers.add(new MyConsumer(color("Consumer_1", ThreadColor.ANSI_RED), lock));
         consumers.add(new MyConsumer(color("Consumer_2", ThreadColor.ANSI_GREEN), lock));
         consumers.add(new MyConsumer(color("Consumer_3", ThreadColor.ANSI_CYAN), lock));
+        consumers.add(new MyConsumer(color("Consumer_4", ThreadColor.ANSI_YELLOW), lock));
+        consumers.add(new MyConsumer(color("Consumer_5", ThreadColor.ANSI_BLUE), lock));
+        consumers.add(new MyConsumer(color("Consumer_6", ThreadColor.ANSI_PURPLE), lock));
 
         consumers.forEach(pool::execute);
     }
