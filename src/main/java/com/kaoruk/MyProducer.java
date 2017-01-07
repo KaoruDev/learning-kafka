@@ -8,8 +8,10 @@ import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
+import twitter4j.TwitterStream;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kaoru on 1/6/17.
@@ -43,7 +45,7 @@ public class MyProducer implements StatusListener {
 
     @Override
     public void onStatus(Status status) {
-        producer.send(new ProducerRecord<>(MyTwitter.TOPIC_NAME, status.getUser().getScreenName(), status.getText()));
+        producer.send(new ProducerRecord<>(MyTwitter.TOPIC_NAME, status.getText()));
     }
 
     @Override
@@ -71,5 +73,27 @@ public class MyProducer implements StatusListener {
         System.out.println("Something went wrong shutting down producer...");
         this.producer.close();
         ex.printStackTrace();
+    }
+
+    public static void main(String[] args) {
+        MyTwitter.initialize();
+        TwitterStream stream = new MyTwitter().getStream();
+        MyProducer producer = new MyProducer();
+
+        try {
+            producer.connect();
+            stream.addListener(producer);
+
+            stream.sample();
+
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            stream.cleanUp();
+            producer.close();
+        }
     }
 }
