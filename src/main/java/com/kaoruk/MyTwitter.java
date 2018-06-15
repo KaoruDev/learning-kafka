@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by kaoru on 1/6/17.
  */
 public class MyTwitter {
-    public static final String TOPIC_NAME = "TwitterStream17";
+    public static final String TOPIC_NAME = "TwitterStream2";
 
     private static boolean initialized = false;
     private static JSONObject twitterConfigs;

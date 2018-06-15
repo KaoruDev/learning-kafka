@@ -4,12 +4,15 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 
+import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +48,10 @@ public class MyProducer implements StatusListener {
 
     @Override
     public void onStatus(Status status) {
-        producer.send(new ProducerRecord<>(MyTwitter.TOPIC_NAME, status.getText()));
+        RecordHeader header = new RecordHeader("foo", "bar".getBytes());
+        Iterable<Header> headers = Collections.singletonList(header);
+
+        producer.send(new ProducerRecord<>(MyTwitter.TOPIC_NAME, null, null, null, status.getText(), headers));
     }
 
     @Override

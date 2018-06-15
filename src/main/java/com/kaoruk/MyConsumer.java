@@ -7,7 +7,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.errors.WakeupException;
+import org.apache.kafka.common.header.Headers;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +67,13 @@ public class MyConsumer implements Runnable{
                 records = consumer.poll(100);
 
                 for (ConsumerRecord<String, String> record : records) {
+
+                    Headers headers = record.headers();
+                    headers.forEach((header) -> {
+                        System.out.println("Header key: " + header.key() +
+                            " value: " +  new String(header.value(), StandardCharsets.UTF_8));
+                    });
+
                     System.out.println(this.name +
                             color(" partition: " + record.partition(), ThreadColor.ANSI_PURPLE) +
                             color(" offset: " + record.offset(), ThreadColor.ANSI_BLUE) +
